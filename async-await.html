@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>async-await</title>
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            margin: 0;
+            height: 100vh;
+            font-family: "Arvo", serif;
+            background: url('flower_bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .container{
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: rgb(37, 37, 88);
+            padding-left: 420px;
+            line-height: 50px;
+        }
+        .container #press{
+            padding: 8px 80px;
+            border-radius: 10px;
+            font-size: 18px;
+            background-color:rgb(12, 190, 190);
+            font-family: inherit;
+            font-weight: 600;
+            margin-top: 15px;
+            border: none;
+        }
+        #press:active{
+            background-color: rgb(18, 148, 105);
+        }
+        #refreshButton{
+            padding: 8px 70px;
+            border-radius: 10px;
+            font-size: 18px;
+            background-color:rgb(12, 190, 190);
+            font-family: inherit;
+            font-weight: 600;
+            margin-top: 15px;
+            border: none;
+        }
+        #refreshButton:active{
+            background-color: rgb(18, 148, 105);
+        }
+        /* style the output content box */
+        #content{
+            background-color: darkgray;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 1px solid darkblue;
+            width: 500px;
+            padding: 5px 10px;
+            min-height: 100px;
+            max-height: 300px; 
+            overflow-y: auto; 
+            word-wrap: break-word; 
+            white-space: pre-line; 
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+
+    </style>
+</head>
+<body>
+    <!-- setting interface elements -->
+    <div class="container">
+        <h1>Async - Await Implementation</h1>
+        <div>
+            <button id="press" onclick="fetchData()">Click</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button id="refreshButton">Refresh</button>
+        </div>
+        <div id="content">Click the button to load Quotes...</div>
+    </div>
+
+    <script>   
+// adding event
+document.addEventListener('DOMContentLoaded', () => {
+    const output = document.getElementById('content');
+
+    async function fetchData() {
+        output.textContent = 'Loading...';
+        // async process using try catch method
+        setTimeout(async () => {
+            try {
+                const response = await fetch("https://dummyjson.com/quotes");//fetch the data
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                output.innerHTML = result.quotes.map(quote => `<p>${quote.quote}</p><h4>--${quote.author}</h4><br>`).join('');
+            } catch (error) {
+                output.textContent = `Error: ${error.message}`;//set error message
+            }
+        }, 5000); //5s time interval
+    }
+
+    document.getElementById('press').addEventListener('click', fetchData);
+    document.getElementById('refreshButton').addEventListener('click', () => location.reload());//event to refresh button
+});
+
+    </script>
+    
+</body>
+</html>
